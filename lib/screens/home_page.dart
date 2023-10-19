@@ -1,6 +1,7 @@
 import 'package:f1_app_flutter/screens/custom_bottom_navigation_bar.dart';
 import 'package:f1_app_flutter/screens/driver_standings_widget.dart';
 import 'package:f1_app_flutter/screens/teams_standings/teams_standings_page.dart';
+import 'package:f1_app_flutter/screens/widgets/calendar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -19,11 +20,7 @@ class _AppHomePage extends State<AppHomePage> {
         /* appBar: AppBar(
      title: Text("F1 APP"),),*/
         body: <Widget>[
-          Container(
-            color: Colors.green,
-            alignment: Alignment.center,
-            child: const Text('CALENDARIO'),
-          ),
+          CalendarEventPage(),
           DriverStandingsPage(),
           TeamsStandingsPage(),
         ][currentIndex],

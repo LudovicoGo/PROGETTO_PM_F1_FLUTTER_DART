@@ -63,7 +63,7 @@ class _DriverStandingsCardState extends State<DriverStandingsCard> {
                 ))),
                 child: Center(
                     child: Stack(alignment: Alignment.bottomRight, children: [
-                  Container(
+                      Container(
                       height: 120.0,
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
@@ -126,15 +126,19 @@ class _DriverStandingsCardState extends State<DriverStandingsCard> {
                                   fontWeight: FontWeight.w400)),
                         ],
                       )),
-                  getDriverNumber(),
-                  Positioned(
-                    left: 210,
+                      getDriverNumber(),
+                      Positioned(
+                        left: 210,
                     // child: Image.asset('assets/images/faces/' + driverStandings['Driver']['driverId'].toString() + '.png'),
-                    child:  isImagePresent ? Image.asset('assets/images/faces/' + driverStandings['Driver']['driverId'].toString() + '.png', width: 130) : Image.asset('assets/images/faces/noDriverPic.png', width: 130), // Sostituisci con l'immagine di fallback desiderata.
+                        child:  isImagePresent ? Image.asset('assets/images/faces/' + driverStandings['Driver']['driverId'].toString() + '.png', width: 130) : Image.asset('assets/images/faces/noDriverPic.png', width: 130), // Sostituisci con l'immagine di fallback desiderata.
                     // child:  Image.asset(getDriverFace(driverStandings[index - 1]['Driver']['driverId'].toString()),
-                    width: 130,
-                  ),
-                ])))));
+                        width: 130,
+                      ),
+                    ])
+                )
+            )
+        )
+    );
   }
 
   String getDriverConstructor() {
