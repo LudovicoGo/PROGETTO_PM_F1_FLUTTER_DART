@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../calendar/calendar_header.dart';
+import '../calendar/calendar_header_past.dart';
 import '../driver_standings/standings_drow_down_year_menu.dart';
 
 class CalendarEventPage extends StatefulWidget {
@@ -31,27 +32,43 @@ class _CalendarEventPage extends State<CalendarEventPage> {
       isLoading = true;
       selectedItem = year;
     });
-    final response = await http
-        .get(Uri.parse('https://ergast.com/api/f1/$year.json'));
+    try {
+      final response = await http.get(Uri.parse('https://ergast.com/api/f1/$year.json'));
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      final calendarEventData = data['MRData']['RaceTable']['Races'];
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        final calendarEventData = data['MRData']['RaceTable']['Races'];
 
+        setState(() {
+          calendarEvent = calendarEventData;
+          isLoading = false;
+        });
+      } else {
+        // Se la risposta non è 200 (OK), gestisci l'errore qui
+        setState(() {
+          calendarEvent = [];
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      // Gestisci qualsiasi eccezione che potrebbe essere sollevata durante la chiamata
       setState(() {
-        calendarEvent = calendarEventData;
+        calendarEvent = [];
         isLoading = false;
       });
-    } else {
-      throw Exception('Failed to load the calendar');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
         child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            toolbarHeight: 0,
+          ),
           body: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -63,15 +80,31 @@ class _CalendarEventPage extends State<CalendarEventPage> {
                 key: UniqueKey(),
                 itemCount: calendarEvent.length + 1,
                 itemBuilder: (context, index) {
-                  if (index == 0){
-                    return const CalendarHeader(heading: 'Calendar');
-                  } else {
-                    return CalendarEventCard(calendarEvent: calendarEvent[index - 1]);
+                  if (index == 0) {
+                    if (calendarEvent != null && calendarEvent.isNotEmpty) {
+                      final nextRace = findNextRace(calendarEvent);
+                      if (isCurrentYear(selectedItem)) {
+                        return CalendarHeader(
+                          heading: 'Calendar',
+                          calendarEvent: findNextRace(calendarEvent),
+                        );
+                      } else {
+                        return const CalendarHeaderPast(heading: 'Calendar');
+                      }
+                    }
+                  } else if (calendarEvent != null && index - 1 < calendarEvent.length) {
+                    final event = calendarEvent[index - 1];
+                    if (event != null) {
+                      return CalendarEventCard(calendarEvent: event);
+                    }
                   }
+                  // Gestione quando l'elemento della lista è nullo o non ci sono eventi
+                  return SizedBox(); // o qualsiasi altro widget vuoto
                 },
               ),
+
               ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
                   child: Container(
                       padding: const EdgeInsets.fromLTRB(9, 1, 4, 1),
                       width: 60,
@@ -83,10 +116,11 @@ class _CalendarEventPage extends State<CalendarEventPage> {
                           onYearChanged: (int newYear) {
                             //passo al widget del dropdown una funzione
                             setState(() {
-                              fetchData(newYear).then((value) => setState(
-                                      () {})); //quando seleziono un altro anno carico la classifica per il nuovo anno selezionato
+                              fetchData(newYear).then((value) => setState((){}));
                             });
-                          }))),
+                          })
+                  )
+              ),
               if (isLoading)
               // Mostra il ModalBarrier per bloccare le interazioni durante il caricamento
                 Stack(alignment: Alignment.center, children: [
@@ -111,6 +145,32 @@ class _CalendarEventPage extends State<CalendarEventPage> {
         ),
       );
   }
+
+  Map<String, dynamic> findNextRace(List<dynamic> calendarEvent) {
+    final now = DateTime.now();
+    Map<String, dynamic>? nextRace;
+
+    if (calendarEvent != null) {
+      for (final race in calendarEvent) {
+        final raceDateStr = race['date'].toString();
+        final raceDate = DateTime.tryParse(raceDateStr);
+
+        if (raceDate!.isAfter(now)) {
+          if (nextRace == null || raceDate.isBefore(DateTime.parse(nextRace['date']))) {
+            nextRace = race;
+          }
+        }
+      }
+    }
+
+    return nextRace ?? {}; // Restituisci una mappa vuota se non è stata trovata una prossima gara
+  }
+
+  bool isCurrentYear(int year) {
+    final currentYear = DateTime.now().year;
+    return year == currentYear;
+  }
+
 
 }
 

@@ -61,6 +61,10 @@ class _TeamsStandingsPage extends State<TeamsStandingsPage> {
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
         child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            toolbarHeight: 0,
+          ),
           // backgroundColor: Colors.grey,
           body: Container(
               decoration: BoxDecoration(

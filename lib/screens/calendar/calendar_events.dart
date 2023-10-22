@@ -80,7 +80,7 @@ class _CalendarEventCardState extends State<CalendarEventCard> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
+                  padding: const EdgeInsets.only(right: 15.0),
                   child: Container(
                     width: 170.0, // Larghezza fissa
                     height: 130.0, // Altezza fissa
