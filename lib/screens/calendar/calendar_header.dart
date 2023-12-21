@@ -97,7 +97,11 @@ class _CalendarHeaderState extends State<CalendarHeader> {
                                     Container(
                                       constraints: const BoxConstraints(maxWidth: 175.0),
                                       child: Text(
-                                        calendarEvent['Circuit']['circuitName'] != null ? calendarEvent['Circuit']['circuitName'].toString() : "circuitName non disponibile",
+                                        calendarEvent != null && calendarEvent['Circuit'] != null
+                                            ? (calendarEvent['Circuit']['circuitName'] != null
+                                            ? calendarEvent['Circuit']['circuitName'].toString()
+                                            : "circuitName non disponibile")
+                                            : "Data non disponibile",
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontFamily: 'formula1',
@@ -106,6 +110,7 @@ class _CalendarHeaderState extends State<CalendarHeader> {
                                         softWrap: true,
                                       ),
                                     ),
+
                                   ],
                                 ),
                               ],
@@ -196,6 +201,7 @@ class _CalendarHeaderState extends State<CalendarHeader> {
       "Qatar": "qa",
       "Korea": "kr",
       "Argentina": "ar",
+      "China": "cn"
     };
     return countryNameToCodeMap[countryName];
   }

@@ -1,5 +1,5 @@
-import 'package:f1_app_flutter/screens/custom_bottom_navigation_bar.dart';
-import 'package:f1_app_flutter/screens/driver_standings_widget.dart';
+import 'package:f1_app_flutter/screens/widgets/custom_bottom_navigation_bar.dart';
+import 'package:f1_app_flutter/screens/widgets/driver_standings_widget.dart';
 import 'package:f1_app_flutter/screens/teams_standings/teams_standings_page.dart';
 import 'package:f1_app_flutter/screens/widgets/calendar_widget.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class _AppHomePage extends State<AppHomePage> {
         bottomNavigationBar: Container(
 
             child: Padding(
-          padding: EdgeInsets.only(top: 12.0),
+          padding: const EdgeInsets.only(top: 4.0),
           child: ClipRRect(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16), topRight: Radius.circular(16)),

@@ -21,7 +21,7 @@ class _CalendarEventPage extends State<CalendarEventPage> {
   @override
   void initState() {
     super.initState();
-    fetchData(2023);
+    fetchData(DateTime.now().year);
   }
 
 
@@ -81,18 +81,23 @@ class _CalendarEventPage extends State<CalendarEventPage> {
                 itemCount: calendarEvent.length + 1,
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    if (calendarEvent != null && calendarEvent.isNotEmpty) {
+                    if (calendarEvent.isNotEmpty) {
+                      // Trova la prossima gara utilizzando la funzione findNextRace
                       final nextRace = findNextRace(calendarEvent);
-                      if (isCurrentYear(selectedItem)) {
+
+                      final nextRaceDateStr = nextRace['date'];
+                      final nextRaceDate = DateTime.tryParse(nextRaceDateStr ?? '');
+
+                      if (nextRaceDate != null && nextRaceDate.isAfter(DateTime.now())) {
                         return CalendarHeader(
                           heading: 'Calendar',
-                          calendarEvent: findNextRace(calendarEvent),
-                        );
-                      } else {
-                        return const CalendarHeaderPast(heading: 'Calendar');
+                          calendarEvent: nextRace);
+                        } else {
+                          return const CalendarHeaderPast(heading: 'Calendar');
                       }
                     }
-                  } else if (calendarEvent != null && index - 1 < calendarEvent.length) {
+                  }
+                  else if (calendarEvent != null && index - 1 < calendarEvent.length) {
                     final event = calendarEvent[index - 1];
                     if (event != null) {
                       return CalendarEventCard(calendarEvent: event);
@@ -104,7 +109,7 @@ class _CalendarEventPage extends State<CalendarEventPage> {
               ),
 
               ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
                   child: Container(
                       padding: const EdgeInsets.fromLTRB(9, 1, 4, 1),
                       width: 60,
@@ -152,19 +157,24 @@ class _CalendarEventPage extends State<CalendarEventPage> {
 
     if (calendarEvent != null) {
       for (final race in calendarEvent) {
-        final raceDateStr = race['date'].toString();
-        final raceDate = DateTime.tryParse(raceDateStr);
+        final raceDateStr = race?['date'];
+        final raceDate = DateTime.tryParse(raceDateStr ?? '');
 
-        if (raceDate!.isAfter(now)) {
-          if (nextRace == null || raceDate.isBefore(DateTime.parse(nextRace['date']))) {
+        final circuitName = race?['Circuit']?['circuitName'];
+
+        if (raceDate != null && circuitName != null) {
+          if (raceDate.isAfter(now) && (nextRace == null || raceDate.isBefore(DateTime.parse(nextRace['date'] ?? '')))) {
             nextRace = race;
           }
         }
       }
     }
 
-    return nextRace ?? {}; // Restituisci una mappa vuota se non è stata trovata una prossima gara
+    return nextRace ?? {};
   }
+
+
+
 
   bool isCurrentYear(int year) {
     final currentYear = DateTime.now().year;
