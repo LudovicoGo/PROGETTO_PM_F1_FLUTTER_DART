@@ -22,8 +22,7 @@ class _TeamsStandingsPage extends State<TeamsStandingsPage> {
   void initState() {
     super
         .initState(); //inizializzo lo stato del widget lanciando il metodo per ottenere la classifica dei piloti
-    fetchData(
-        2023); //all'avvio viene mostrata la classifica per l'anno corrente
+    fetchData(DateTime.now().year); //all'avvio viene mostrata la classifica per l'anno corrente
   }
 
   Future<void> fetchData(int year) async {
@@ -40,15 +39,43 @@ class _TeamsStandingsPage extends State<TeamsStandingsPage> {
 
       final Map<String, dynamic> data = json.decode(response
           .body); //per convertire il body della risposta ottenuta, il json in pratica, in un oggetto di tipo map
-      final constructorStandingsData = data['MRData']['StandingsTable']
-              ['StandingsLists'][0][
-          'ConstructorStandings']; //qui estraggo l'oggetto MRData.StandingsTable.StandingsLists[0].ConstructorStandings
 
-      setState(() {
-        constructorStandings =
-            constructorStandingsData; //salvo nello stato del widget l'oggetto driverStandings estratto prima dal body json
-        isLoading = false;
-      });
+      if(data['MRData']['StandingsTable']['StandingsLists'].length != 0) {
+        final constructorStandingsData = data['MRData']['StandingsTable']
+                ['StandingsLists'][0][
+            'ConstructorStandings']; //qui estraggo l'oggetto MRData.StandingsTable.StandingsLists[0].ConstructorStandings
+
+        setState(() {
+          constructorStandings = constructorStandingsData; //salvo nello stato del widget l'oggetto driverStandings estratto prima dal body json
+          isLoading = false;
+        });
+      } else {
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Container(
+              width: 200, // Imposta la larghezza desiderata
+              child: Text(
+                '$year data not yet available...',
+                style: TextStyle(
+                  fontFamily: 'formula1',
+
+                  fontSize: 14, // Modifica la dimensione del testo
+                  fontWeight: FontWeight.normal, // Modifica lo stile del testo
+                  color: Colors.black, // Modifica il colore del testo
+                ),
+              ),
+            ),
+            backgroundColor: Colors.grey[300],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        fetchData(year-1);
+
+      }
     } else {
       throw Exception(
           'Failed to load constructor standings'); //se la richiesta http non è stata eseguita con successo lancio un'eccezione

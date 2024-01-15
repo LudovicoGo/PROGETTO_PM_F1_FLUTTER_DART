@@ -30,13 +30,15 @@ class _StandingsDropDownYearMenuState extends State<StandingsDropDownYearMenu> {
     return DropdownButton<int>(
       style: TextStyle(fontFamily: 'formula1', color: Colors.white),
       dropdownColor: Colors.black,
+      // isExpanded: true,
       borderRadius: BorderRadius.all(Radius.circular(16)),
       value: selectedYear,
       underline: Container(),
-      icon: const Icon(
+      icon: Container(),
+      /*icon: const Icon(
         Icons.arrow_drop_down, //per rimuovere la freccetta
         color: Colors.transparent,
-      ),
+      ),*/
       elevation: 20,
 
       onChanged: (int? newValue) {

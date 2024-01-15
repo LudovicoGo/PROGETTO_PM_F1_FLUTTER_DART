@@ -94,7 +94,12 @@ class _CalendarEventCardState extends State<CalendarEventCard> {
                         imageUrl: 'https://flagpedia.net/data/flags/w1160/${getCountryCode(calendarEvent['Circuit']['Location']['country'].toString())}.webp',
                         fit: BoxFit.cover,
                         placeholder: (context, url) => const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                        // errorWidget: (context, url, error) => const Icon(Icons.error),
+                        errorWidget: (context, url, error) {
+                          print("Errore durante il caricamento dell'immagine: $error");
+                          return const Icon(Icons.error);
+                        },
+
                       ),
                     ),
                   ),

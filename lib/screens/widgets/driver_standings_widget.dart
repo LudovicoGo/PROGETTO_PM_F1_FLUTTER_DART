@@ -1,5 +1,4 @@
 import 'package:f1_app_flutter/screens/driver_standings/driver_standings_card.dart';
-import 'package:f1_app_flutter/screens/driver_standings/driver_standings_header.dart';
 import 'package:f1_app_flutter/screens/driver_standings/standings_drow_down_year_menu.dart';
 import 'package:f1_app_flutter/screens/widgets/standings_header.dart';
 import 'package:flutter/material.dart';
@@ -13,16 +12,14 @@ class DriverStandingsPage extends StatefulWidget {
 }
 
 class _DriverStandingsPageState extends State<DriverStandingsPage> {
-  List<dynamic> driverStandings =
-      []; //nello stato del widget metto una lista di oggetti dynamic, quindi una lista che può contenere un qualsiasi tipo di oggetto
+  List<dynamic> driverStandings = []; //nello stato del widget metto una lista di oggetti dynamic, quindi una lista che può contenere un qualsiasi tipo di oggetto
   bool isLoading = false;
 
   @override
   void initState() {
     super
         .initState(); //inizializzo lo stato del widget lanciando il metodo per ottenere la classifica dei piloti
-    fetchData(
-        2023); //all'avvio viene mostrata la classifica per l'anno corrente
+    fetchData(DateTime.now().year); //all'avvio viene mostrata la classifica per l'anno corrente
   }
 
   int selectedItem = 0;
@@ -38,18 +35,41 @@ class _DriverStandingsPageState extends State<DriverStandingsPage> {
     if (response.statusCode == 200) {
       // verifica se lo stato della risposta http è 200 (cioè la richista http è stata eseguita con successo)
 
-      final Map<String, dynamic> data = json.decode(response
-          .body); //per convertire il body della risposta ottenuta, il json in pratica, in un oggetto di tipo map
-      final driverStandingsData = data['MRData']['StandingsTable']
-              ['StandingsLists'][0][
-          'DriverStandings']; //qui estraggo l'oggetto MRData.StandingsTable.StandingsLists[0].DriverStandings
+      final Map<String, dynamic> data = json.decode(response.body); //per convertire il body della risposta ottenuta, il json in pratica, in un oggetto di tipo map
 
-      setState(() {
-        driverStandings =
-            driverStandingsData; //salvo nello stato del widget l'oggetto driverStandings estratto prima dal body json
-        // print('DRIVERSTANDINGS aggiornato: $driverStandings');
-        isLoading = false;
-      });
+      if (data['MRData']['StandingsTable']['StandingsLists'].length != 0) {
+        final driverStandingsData = data['MRData']['StandingsTable']['StandingsLists'][0]['DriverStandings']; //qui estraggo l'oggetto MRData.StandingsTable.StandingsLists[0].DriverStandings
+        setState(() {
+          driverStandings =
+              driverStandingsData; //salvo nello stato del widget l'oggetto driverStandings estratto prima dal body json
+          // print('DRIVERSTANDINGS aggiornato: $driverStandings');
+          isLoading = false;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Container(
+              width: 200, // Imposta la larghezza desiderata
+              child: Text(
+                '$year data not yet available...',
+                style: TextStyle(
+                  fontFamily: 'formula1',
+
+                  fontSize: 14, // Modifica la dimensione del testo
+                  fontWeight: FontWeight.normal, // Modifica lo stile del testo
+                  color: Colors.black, // Modifica il colore del testo
+                ),
+              ),
+            ),
+            backgroundColor: Colors.grey[300],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        fetchData(year-1);
+      }
     } else {
       throw Exception(
           'Failed to load driver standings'); //se la richiesta http non è stata eseguita con successo lancio un'eccezione
