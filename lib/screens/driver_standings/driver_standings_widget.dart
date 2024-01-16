@@ -1,5 +1,5 @@
 import 'package:f1_app_flutter/screens/driver_standings/driver_standings_card.dart';
-import 'package:f1_app_flutter/screens/driver_standings/standings_drow_down_year_menu.dart';
+import 'package:f1_app_flutter/screens/widgets/drop_down_year_menu.dart';
 import 'package:f1_app_flutter/screens/widgets/standings_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

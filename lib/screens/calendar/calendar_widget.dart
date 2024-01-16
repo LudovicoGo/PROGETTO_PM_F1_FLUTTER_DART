@@ -5,9 +5,9 @@ import 'package:f1_app_flutter/screens/calendar/calendar_events.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../calendar/calendar_header.dart';
-import '../calendar/calendar_header_past.dart';
-import '../driver_standings/standings_drow_down_year_menu.dart';
+import 'calendar_header.dart';
+import 'calendar_header_past.dart';
+import '../widgets/drop_down_year_menu.dart';
 
 class CalendarEventPage extends StatefulWidget {
   @override
