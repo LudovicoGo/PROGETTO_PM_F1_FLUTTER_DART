@@ -54,7 +54,6 @@ class _DriverStandingsPageState extends State<DriverStandingsPage> {
                 '$year data not yet available...',
                 style: TextStyle(
                   fontFamily: 'formula1',
-
                   fontSize: 14, // Modifica la dimensione del testo
                   fontWeight: FontWeight.normal, // Modifica lo stile del testo
                   color: Colors.black, // Modifica il colore del testo
@@ -66,8 +65,7 @@ class _DriverStandingsPageState extends State<DriverStandingsPage> {
               borderRadius: BorderRadius.circular(10.0),
             ),
             behavior: SnackBarBehavior.floating,
-          ),
-        );
+          ),);
         fetchData(year-1);
       }
     } else {
@@ -143,11 +141,7 @@ class _DriverStandingsPageState extends State<DriverStandingsPage> {
                           style: TextStyle(
                               fontFamily: 'formula1',
                               fontSize: 25,
-                              fontWeight: FontWeight.bold),
-                        )))
-              ]),
-          ])),
-    ));
+                              fontWeight: FontWeight.bold),)))]),])),));
   }
 }
 

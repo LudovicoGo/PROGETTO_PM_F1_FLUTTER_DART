@@ -59,7 +59,6 @@ class _CalendarEventPage extends State<CalendarEventPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -173,14 +172,10 @@ class _CalendarEventPage extends State<CalendarEventPage> {
     return nextRace ?? {};
   }
 
-
-
-
   bool isCurrentYear(int year) {
     final currentYear = DateTime.now().year;
     return year == currentYear;
   }
-
 
 }
 
